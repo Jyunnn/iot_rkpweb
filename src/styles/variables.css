@@ -1,0 +1,31 @@
+:root {
+  /* 主色與品牌色 */
+  --color-primary: #446cfc;
+  --color-secondary: #30c7d5;
+
+  /* 背景與卡片 */
+  --color-bg-main: #181c29;
+  --color-bg-card: #232942;
+  --color-bg-nav: #446cfc;
+
+  /* 文字顏色 */
+  --color-text-main: #e4e6f0;
+
+  --color-text-secondary: #b6b8c8;
+
+  /* 邊框與分隔線 */
+  --color-border: #2c3657;
+
+  /* 狀態色 */
+  --color-success: #1fcb81;
+  --color-warning: #ffc542;
+  --color-error: #f24848;
+
+  /* download/upload 專用色 */
+  --color-download: #1fd47c;
+  --color-upload: #f5b941;
+
+  /* 陰影/玻璃效果（進階） */
+  --color-card-glass: rgba(35,41,66,0.85);
+  --box-shadow-card: 0 2px 12px rgba(68,108,252,0.05);
+}
