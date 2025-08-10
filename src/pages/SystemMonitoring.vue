@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-4">
+  <v-container class="pa-4" fluid>
     <v-card>
       <v-card-title>系統監控</v-card-title>
       <v-card-text>
