@@ -60,7 +60,8 @@
 <style scoped lang="scss">
   .drawer-toggle {
     position: fixed;
-    bottom: 72px;
+    bottom: 54px;
     left: 16px;
+    z-index: 999;
   }
 </style>
