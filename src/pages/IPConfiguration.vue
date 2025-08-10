@@ -1,65 +1,71 @@
 <template>
-  <v-container class="pa-4" max-width="600">
+  <v-container class="pa-4">
     <v-form>
-      <v-card>
-        <v-card-title>IP設定</v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="ipAddress"
-            clearable
-            label="IP位置"
-          />
-          <v-text-field
-            v-model="port"
-            clearable
-            label="Port號"
-          />
-          <v-text-field
-            v-model="ipName"
-            clearable
-            label="IP名稱"
-          />
-          <v-select
-            v-model="selectedNic"
-            clearable
-            item-title="name"
-            item-value="id"
-            :items="networkInterfaces"
-            label="網卡名稱"
-            return-object
-          />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" @click="submit">送出</v-btn>
-        </v-card-actions>
-      </v-card>
+      <v-row>
+        <v-col cols="12" md="6">
+          <v-card>
+            <v-card-title>IP設定</v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="ipAddress"
+                clearable
+                label="IP位置"
+              />
+              <v-text-field
+                v-model="port"
+                clearable
+                label="Port號"
+              />
+              <v-text-field
+                v-model="ipName"
+                clearable
+                label="IP名稱"
+              />
+              <v-select
+                v-model="selectedNic"
+                clearable
+                item-title="name"
+                item-value="id"
+                :items="networkInterfaces"
+                label="網卡名稱"
+                return-object
+              />
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn color="primary" @click="submit">送出</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
 
-      <v-card class="mt-6">
-        <v-card-title>
-          網卡資訊
-          <v-spacer />
-          <v-btn icon="mdi-plus" variant="text" @click="addNicSetting" />
-        </v-card-title>
-        <v-card-text>
-          <div v-for="(nic, index) in nicSettings" :key="index" class="mb-4">
-            <v-text-field v-model="nic.name" label="名稱" />
-            <v-text-field v-model="nic.address" label="位址" />
-            <v-text-field v-model="nic.bridge" label="Bridge相關設置" />
-            <v-btn
-              class="mt-2"
-              color="error"
-              icon="mdi-delete"
-              variant="text"
-              @click="removeNicSetting(index)"
-            />
-          </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" @click="submitNicSettings">送出</v-btn>
-        </v-card-actions>
-      </v-card>
+        <v-col cols="12" md="6">
+          <v-card class="mt-6 mt-md-0">
+            <v-card-title>
+              網卡資訊
+              <v-spacer />
+              <v-btn icon="mdi-plus" variant="text" @click="addNicSetting" />
+            </v-card-title>
+            <v-card-text>
+              <div v-for="(nic, index) in nicSettings" :key="index" class="mb-4">
+                <v-text-field v-model="nic.name" label="名稱" />
+                <v-text-field v-model="nic.address" label="位址" />
+                <v-text-field v-model="nic.bridge" label="Bridge相關設置" />
+                <v-btn
+                  class="mt-2"
+                  color="error"
+                  icon="mdi-delete"
+                  variant="text"
+                  @click="removeNicSetting(index)"
+                />
+              </div>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn color="primary" @click="submitNicSettings">送出</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-form>
   </v-container>
 
