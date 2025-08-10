@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" max-width="344">
+  <v-card class="system-card">
     <v-card-text>
       <slot />
     </v-card-text>
@@ -12,5 +12,9 @@
 <script setup>
 </script>
 
-<style scoped lang="sass">
+<style scoped lang="scss">
+.system-card {
+  width: 192px;
+  margin: 4px;
+}
 </style>
