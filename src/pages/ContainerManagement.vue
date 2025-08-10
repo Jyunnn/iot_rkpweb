@@ -1,5 +1,6 @@
 <template>
-  <v-container>
+  <v-container class="pa-4">
+    <v-card-title>容器管理</v-card-title>
     <v-table>
       <thead>
         <tr>
@@ -31,21 +32,22 @@
         </tr>
       </tbody>
     </v-table>
-    <v-dialog v-model="settingsDialog" max-width="400">
-      <v-card>
-        <v-card-title>設定</v-card-title>
-        <v-card-text>
-          <v-text-field v-model="settings.field1" label="設定 1" />
-          <v-text-field v-model="settings.field2" label="設定 2" />
-          <v-select v-model="settings.option" :items="options" label="選項" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" @click="saveSettings">送出</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
+
+  <v-dialog v-model="settingsDialog" max-width="400">
+    <v-card>
+      <v-card-title>設定</v-card-title>
+      <v-card-text>
+        <v-text-field v-model="settings.field1" label="設定 1" />
+        <v-text-field v-model="settings.field2" label="設定 2" />
+        <v-select v-model="settings.option" :items="options" label="選項" />
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="primary" @click="saveSettings">送出</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>

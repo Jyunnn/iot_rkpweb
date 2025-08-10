@@ -1,20 +1,22 @@
 <template>
-  <p>系統監控</p>
-  <div class="d-flex flex-wrap gap-4">
-    <SystemCard v-for="(item, index) in systems" :key="index">
-      <template #default>
-        <div>容器 IP：{{ item.ip }}</div>
-        <p class="text-h4 font-weight-black">網路使用量：{{ item.networkUsage }}</p>
-        <p>啟用狀態：{{ item.isActive ? '啟用' : '停用' }}</p>
-      </template>
-      <template #actions>
-        <v-btn icon variant="text" @click="openLogs(item)">
-          <v-icon>mdi-file-document-outline</v-icon>
-        </v-btn>
-        <v-btn color="deep-purple-accent-4" variant="text">查看更多</v-btn>
-      </template>
-    </SystemCard>
-  </div>
+  <v-container class="pa-4">
+    <v-card-title>系統監控</v-card-title>
+    <div class="d-flex flex-wrap gap-4">
+      <SystemCard v-for="(item, index) in systems" :key="index">
+        <template #default>
+          <div>容器 IP：{{ item.ip }}</div>
+          <p class="text-h4 font-weight-black">網路使用量：{{ item.networkUsage }}</p>
+          <p>啟用狀態：{{ item.isActive ? '啟用' : '停用' }}</p>
+        </template>
+        <template #actions>
+          <v-btn icon variant="text" @click="openLogs(item)">
+            <v-icon>mdi-file-document-outline</v-icon>
+          </v-btn>
+          <v-btn color="deep-purple-accent-4" variant="text">查看更多</v-btn>
+        </template>
+      </SystemCard>
+    </div>
+  </v-container>
 
   <v-dialog v-model="logsDialog" max-width="600">
     <v-card>
