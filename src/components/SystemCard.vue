@@ -14,7 +14,6 @@
 
 <style scoped lang="scss">
 .system-card {
-  width: 192px;
-  margin: 4px;
+  width: 100%;
 }
 </style>
