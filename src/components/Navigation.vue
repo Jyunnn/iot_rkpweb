@@ -61,7 +61,7 @@
 <style scoped lang="scss">
   .drawer-toggle {
     position: fixed;
-    bottom: 16px;
+    bottom: 72px;
     left: 16px;
   }
 </style>
