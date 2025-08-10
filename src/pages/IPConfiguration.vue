@@ -92,10 +92,11 @@
   }
 
   const removeNicSetting = index => {
-    nicSettings.value.splice(index, 1)
-    if (nicSettings.value.length === 0) {
-      nicSettings.value.push({ name: '', address: '', bridge: '' })
+    if (nicSettings.value.length === 1) {
+      alert('至少需要保留一組網卡資訊')
+      return
     }
+    nicSettings.value.splice(index, 1)
   }
 
   const ipRule = value => {
