@@ -19,7 +19,6 @@
       </div>
     </v-list-item>
   </v-navigation-drawer>
-  <v-main />
 
   <v-btn
     class="drawer-toggle"
