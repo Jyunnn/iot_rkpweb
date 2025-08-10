@@ -19,6 +19,16 @@
         label="IP名稱"
         :rules="[nameRule]"
       />
+      <v-select
+        v-model="selectedNic"
+        clearable
+        item-title="name"
+        item-value="id"
+        :items="networkInterfaces"
+        label="網卡名稱"
+        return-object
+        :rules="[nicRule]"
+      />
       <v-btn class="mt-4" color="primary" @click="submit">
         送出
       </v-btn>
@@ -41,11 +51,13 @@
 </template>
 
 <script setup>
-  import { ref, watch } from 'vue'
+  import { onMounted, ref, watch } from 'vue'
 
   const ipAddress = ref('')
   const port = ref('')
   const ipName = ref('')
+  const networkInterfaces = ref([])
+  const selectedNic = ref(null)
   const form = ref()
   const valid = ref(false)
   const logsDialog = ref(false)
@@ -69,6 +81,11 @@
     return true
   }
 
+  const nicRule = value => {
+    if (!value) return '請選擇網卡'
+    return true
+  }
+
   watch(ipAddress, val => {
     const sanitized = val.replace(/[^\d.]/g, '')
     if (sanitized !== val) ipAddress.value = sanitized
@@ -84,6 +101,15 @@
     if (sanitized !== val) ipName.value = sanitized
   })
 
+  onMounted(async () => {
+    try {
+      const res = await fetch('/api/network-interfaces')
+      networkInterfaces.value = res.ok ? await res.json() : []
+    } catch {
+      networkInterfaces.value = []
+    }
+  })
+
   const submit = async () => {
     const success = await form.value?.validate()
     if (success) {
@@ -97,6 +123,8 @@
             ip: ipAddress.value,
             port: port.value,
             name: ipName.value,
+            nicId: selectedNic.value.id,
+            nicName: selectedNic.value.name,
           }),
         })
         if (res.ok) {
