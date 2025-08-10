@@ -1,39 +1,36 @@
 <template>
   <v-container>
-    <v-card>
-      <v-card-title>容器管理</v-card-title>
-      <v-table>
-        <thead>
-          <tr>
-            <th class="text-left">容器名稱</th>
-            <th class="text-left">容器IP</th>
-            <th class="text-left">網卡名稱</th>
-            <th class="text-left">功能</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(container, index) in containers" :key="index">
-            <td>{{ container.name }}</td>
-            <td>{{ container.ip }}</td>
-            <td>{{ container.nic }}</td>
-            <td>
-              <v-btn icon size="x-large" variant="text" @click="toggle(container)">
-                <v-icon size="x-large">{{ container.enabled ? 'mdi-pause-circle' : 'mdi-play-circle' }}</v-icon>
-              </v-btn>
-              <v-btn icon size="x-large" variant="text" @click="duplicate(container)">
-                <v-icon size="x-large">mdi-content-copy</v-icon>
-              </v-btn>
-              <v-btn icon size="x-large" variant="text" @click="openSettings(container)">
-                <v-icon size="x-large">mdi-cog</v-icon>
-              </v-btn>
-              <v-btn icon size="x-large" variant="text" @click="remove(container)">
-                <v-icon size="x-large">mdi-delete</v-icon>
-              </v-btn>
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
-    </v-card>
+    <v-table>
+      <thead>
+        <tr>
+          <th class="text-left">容器名稱</th>
+          <th class="text-left">容器IP</th>
+          <th class="text-left">網卡名稱</th>
+          <th class="text-left">功能</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(container, index) in containers" :key="index">
+          <td>{{ container.name }}</td>
+          <td>{{ container.ip }}</td>
+          <td>{{ container.nic }}</td>
+          <td>
+            <v-btn icon size="x-large" variant="text" @click="toggle(container)">
+              <v-icon size="x-large">{{ container.enabled ? 'mdi-pause-circle' : 'mdi-play-circle' }}</v-icon>
+            </v-btn>
+            <v-btn icon size="x-large" variant="text" @click="duplicate(container)">
+              <v-icon size="x-large">mdi-content-copy</v-icon>
+            </v-btn>
+            <v-btn icon size="x-large" variant="text" @click="openSettings(container)">
+              <v-icon size="x-large">mdi-cog</v-icon>
+            </v-btn>
+            <v-btn icon size="x-large" variant="text" @click="remove(container)">
+              <v-icon size="x-large">mdi-delete</v-icon>
+            </v-btn>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
     <v-dialog v-model="settingsDialog" max-width="400">
       <v-card>
         <v-card-title>設定</v-card-title>
