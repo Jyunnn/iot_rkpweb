@@ -59,6 +59,10 @@
             />
           </div>
         </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="primary" @click="submitNicSettings">送出</v-btn>
+        </v-card-actions>
       </v-card>
     </v-form>
   </v-container>
@@ -178,7 +182,6 @@
             name: ipName.value,
             nicId: selectedNic.value.id,
             nicName: selectedNic.value.name,
-            nicSettings: nicSettings.value,
           }),
         })
         if (res.ok) {
@@ -192,6 +195,28 @@
       } finally {
         responseLoading.value = false
       }
+    }
+  }
+
+  const submitNicSettings = async () => {
+    responseLoading.value = true
+    logsDialog.value = true
+    try {
+      const res = await fetch('/api/nic-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nicSettings: nicSettings.value }),
+      })
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}))
+        responseMessage.value = data.message ?? '設定成功'
+      } else {
+        responseMessage.value = '設定失敗'
+      }
+    } catch {
+      responseMessage.value = '設定失敗'
+    } finally {
+      responseLoading.value = false
     }
   }
 </script>
