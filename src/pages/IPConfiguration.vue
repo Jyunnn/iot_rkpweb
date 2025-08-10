@@ -45,6 +45,13 @@
           <v-text-field v-model="nic.name" label="名稱" />
           <v-text-field v-model="nic.address" label="位址" />
           <v-text-field v-model="nic.bridge" label="Bridge相關設置" />
+          <v-btn
+            class="mt-2"
+            color="error"
+            icon="mdi-delete"
+            variant="text"
+            @click="removeNicSetting(index)"
+          />
         </div>
       </v-card-text>
     </v-card>
@@ -82,6 +89,13 @@
 
   const addNicSetting = () => {
     nicSettings.value.push({ name: '', address: '', bridge: '' })
+  }
+
+  const removeNicSetting = index => {
+    nicSettings.value.splice(index, 1)
+    if (nicSettings.value.length === 0) {
+      nicSettings.value.push({ name: '', address: '', bridge: '' })
+    }
   }
 
   const ipRule = value => {
