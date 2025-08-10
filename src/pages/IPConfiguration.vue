@@ -1,6 +1,6 @@
 <template>
   <v-container class="pa-4" max-width="600">
-    <v-form ref="form" v-model="valid">
+    <v-form>
       <v-card>
         <v-card-title>IP設定</v-card-title>
         <v-card-text>
@@ -8,19 +8,16 @@
             v-model="ipAddress"
             clearable
             label="IP位置"
-            :rules="[ipRule]"
           />
           <v-text-field
             v-model="port"
             clearable
             label="Port號"
-            :rules="[portRule]"
           />
           <v-text-field
             v-model="ipName"
             clearable
             label="IP名稱"
-            :rules="[nameRule]"
           />
           <v-select
             v-model="selectedNic"
@@ -30,7 +27,6 @@
             :items="networkInterfaces"
             label="網卡名稱"
             return-object
-            :rules="[nicRule]"
           />
         </v-card-text>
         <v-card-actions>
@@ -101,8 +97,6 @@
   const ipName = ref('')
   const networkInterfaces = ref([])
   const selectedNic = ref(null)
-  const form = ref()
-  const valid = ref(false)
   const logsDialog = ref(false)
   const responseMessage = ref('')
   const responseLoading = ref(false)
@@ -119,28 +113,6 @@
       return
     }
     nicSettings.value.splice(index, 1)
-  }
-
-  const ipRule = value => {
-    if (!value) return '請輸入IP位置'
-    const ipv4Regex = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/
-    return ipv4Regex.test(value) || '請輸入正確的IP格式'
-  }
-
-  const portRule = value => {
-    if (!value) return '請輸入Port號'
-    const portNum = Number(value)
-    return (portNum >= 0 && portNum <= 65_535) || '請輸入正確的Port號'
-  }
-
-  const nameRule = value => {
-    if (!value) return '請輸入IP名稱'
-    return true
-  }
-
-  const nicRule = value => {
-    if (!value) return '請選擇網卡'
-    return true
   }
 
   watch(ipAddress, val => {
@@ -168,33 +140,63 @@
   })
 
   const submit = async () => {
-    const success = await form.value?.validate()
-    if (success) {
-      responseLoading.value = true
+    const ipv4Regex = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/
+    if (!ipAddress.value) {
+      responseMessage.value = '請輸入IP位置'
       logsDialog.value = true
-      try {
-        const res = await fetch('/api/ip-config', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ip: ipAddress.value,
-            port: port.value,
-            name: ipName.value,
-            nicId: selectedNic.value.id,
-            nicName: selectedNic.value.name,
-          }),
-        })
-        if (res.ok) {
-          const data = await res.json().catch(() => ({}))
-          responseMessage.value = data.message ?? '設定成功'
-        } else {
-          responseMessage.value = '設定失敗'
-        }
-      } catch {
+      return
+    }
+    if (!ipv4Regex.test(ipAddress.value)) {
+      responseMessage.value = '請輸入正確的IP格式'
+      logsDialog.value = true
+      return
+    }
+    if (!port.value) {
+      responseMessage.value = '請輸入Port號'
+      logsDialog.value = true
+      return
+    }
+    const portNum = Number(port.value)
+    if (portNum < 0 || portNum > 65_535) {
+      responseMessage.value = '請輸入正確的Port號'
+      logsDialog.value = true
+      return
+    }
+    if (!ipName.value) {
+      responseMessage.value = '請輸入IP名稱'
+      logsDialog.value = true
+      return
+    }
+    if (!selectedNic.value) {
+      responseMessage.value = '請選擇網卡'
+      logsDialog.value = true
+      return
+    }
+
+    responseLoading.value = true
+    logsDialog.value = true
+    try {
+      const res = await fetch('/api/ip-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ip: ipAddress.value,
+          port: port.value,
+          name: ipName.value,
+          nicId: selectedNic.value.id,
+          nicName: selectedNic.value.name,
+        }),
+      })
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}))
+        responseMessage.value = data.message ?? '設定成功'
+      } else {
         responseMessage.value = '設定失敗'
-      } finally {
-        responseLoading.value = false
       }
+    } catch {
+      responseMessage.value = '設定失敗'
+    } finally {
+      responseLoading.value = false
     }
   }
 
