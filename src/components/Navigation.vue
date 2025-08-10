@@ -19,10 +19,16 @@
       </div>
     </v-list-item>
   </v-navigation-drawer>
+  <v-main />
 
-  <v-main class="d-flex align-center justify-center">
-    <v-switch v-model="open" color="success" />
-  </v-main>
+  <v-btn
+    class="drawer-toggle"
+    color="primary"
+    icon
+    @click="open = !open"
+  >
+    <v-icon icon="mdi-menu" />
+  </v-btn>
 </template>
 
 <script setup>
@@ -53,5 +59,9 @@
 </script>
 
 <style scoped lang="scss">
-
+  .drawer-toggle {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+  }
 </style>
