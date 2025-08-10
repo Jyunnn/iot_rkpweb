@@ -42,7 +42,6 @@
           <v-card class="mt-6 mt-md-0">
             <v-card-title>
               網卡資訊
-              <v-spacer />
               <v-btn icon="mdi-plus" variant="text" @click="addNicSetting" />
             </v-card-title>
             <v-card-text>
