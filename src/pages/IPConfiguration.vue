@@ -199,6 +199,11 @@
   }
 
   const submitNicSettings = async () => {
+    if (!nicSettings.value.every(nic => nic.name && nic.address && nic.bridge)) {
+      responseMessage.value = '請完整填寫所有網卡資訊'
+      logsDialog.value = true
+      return
+    }
     responseLoading.value = true
     logsDialog.value = true
     try {
