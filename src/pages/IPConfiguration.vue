@@ -24,6 +24,20 @@
       </v-btn>
     </v-form>
   </v-container>
+
+  <v-dialog v-model="logsDialog" max-width="400">
+    <v-card>
+      <v-card-title>API 回應</v-card-title>
+      <v-card-text>
+        <v-progress-circular v-if="responseLoading" color="primary" indeterminate />
+        <div v-else>{{ responseMessage }}</div>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn text @click="logsDialog = false">關閉</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -34,6 +48,9 @@
   const ipName = ref('')
   const form = ref()
   const valid = ref(false)
+  const logsDialog = ref(false)
+  const responseMessage = ref('')
+  const responseLoading = ref(false)
 
   const ipRule = value => {
     if (!value) return '請輸入IP位置'
@@ -67,15 +84,32 @@
     if (sanitized !== val) ipName.value = sanitized
   })
 
-  const submit = () => {
-    form.value?.validate().then(success => {
-      if (success) {
-        console.log('submit', {
-          ip: ipAddress.value,
-          port: port.value,
-          name: ipName.value,
+  const submit = async () => {
+    const success = await form.value?.validate()
+    if (success) {
+      responseLoading.value = true
+      logsDialog.value = true
+      try {
+        const res = await fetch('/api/ip-config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ip: ipAddress.value,
+            port: port.value,
+            name: ipName.value,
+          }),
         })
+        if (res.ok) {
+          const data = await res.json().catch(() => ({}))
+          responseMessage.value = data.message ?? '設定成功'
+        } else {
+          responseMessage.value = '設定失敗'
+        }
+      } catch {
+        responseMessage.value = '設定失敗'
+      } finally {
+        responseLoading.value = false
       }
-    })
+    }
   }
 </script>
