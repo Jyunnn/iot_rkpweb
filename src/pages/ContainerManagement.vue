@@ -17,17 +17,17 @@
             <td>{{ container.ip }}</td>
             <td>{{ container.nic }}</td>
             <td>
-              <v-btn icon variant="text" @click="toggle(container)">
-                <v-icon>{{ container.enabled ? 'mdi-pause-circle' : 'mdi-play-circle' }}</v-icon>
+              <v-btn icon size="x-large" variant="text" @click="toggle(container)">
+                <v-icon size="x-large">{{ container.enabled ? 'mdi-pause-circle' : 'mdi-play-circle' }}</v-icon>
               </v-btn>
-              <v-btn icon variant="text" @click="duplicate(container)">
-                <v-icon>mdi-content-copy</v-icon>
+              <v-btn icon size="x-large" variant="text" @click="duplicate(container)">
+                <v-icon size="x-large">mdi-content-copy</v-icon>
               </v-btn>
-              <v-btn icon variant="text" @click="openSettings(container)">
-                <v-icon>mdi-cog</v-icon>
+              <v-btn icon size="x-large" variant="text" @click="openSettings(container)">
+                <v-icon size="x-large">mdi-cog</v-icon>
               </v-btn>
-              <v-btn icon variant="text" @click="remove(container)">
-                <v-icon>mdi-delete</v-icon>
+              <v-btn icon size="x-large" variant="text" @click="remove(container)">
+                <v-icon size="x-large">mdi-delete</v-icon>
               </v-btn>
             </td>
           </tr>
