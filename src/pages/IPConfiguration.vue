@@ -57,6 +57,17 @@
     </v-card>
   </v-container>
 
+  <v-dialog v-model="deleteWarning" max-width="300">
+    <v-card>
+      <v-card-title class="text-h6">提示</v-card-title>
+      <v-card-text>至少需要保留一組網卡資訊</v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn text @click="deleteWarning = false">確定</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   <v-dialog v-model="logsDialog" max-width="400">
     <v-card>
       <v-card-title>API 回應</v-card-title>
@@ -85,6 +96,7 @@
   const logsDialog = ref(false)
   const responseMessage = ref('')
   const responseLoading = ref(false)
+  const deleteWarning = ref(false)
   const nicSettings = ref([{ name: '', address: '', bridge: '' }])
 
   const addNicSetting = () => {
@@ -93,7 +105,7 @@
 
   const removeNicSetting = index => {
     if (nicSettings.value.length === 1) {
-      alert('至少需要保留一組網卡資訊')
+      deleteWarning.value = true
       return
     }
     nicSettings.value.splice(index, 1)
