@@ -1,60 +1,66 @@
 <template>
   <v-container class="pa-4" max-width="600">
     <v-form ref="form" v-model="valid">
-      <v-text-field
-        v-model="ipAddress"
-        clearable
-        label="IP位置"
-        :rules="[ipRule]"
-      />
-      <v-text-field
-        v-model="port"
-        clearable
-        label="Port號"
-        :rules="[portRule]"
-      />
-      <v-text-field
-        v-model="ipName"
-        clearable
-        label="IP名稱"
-        :rules="[nameRule]"
-      />
-      <v-select
-        v-model="selectedNic"
-        clearable
-        item-title="name"
-        item-value="id"
-        :items="networkInterfaces"
-        label="網卡名稱"
-        return-object
-        :rules="[nicRule]"
-      />
-      <v-btn class="mt-4" color="primary" @click="submit">
-        送出
-      </v-btn>
-    </v-form>
-
-    <v-card class="mt-6">
-      <v-card-title>
-        網卡資訊
-        <v-spacer />
-        <v-btn icon="mdi-plus" variant="text" @click="addNicSetting" />
-      </v-card-title>
-      <v-card-text>
-        <div v-for="(nic, index) in nicSettings" :key="index" class="mb-4">
-          <v-text-field v-model="nic.name" label="名稱" />
-          <v-text-field v-model="nic.address" label="位址" />
-          <v-text-field v-model="nic.bridge" label="Bridge相關設置" />
-          <v-btn
-            class="mt-2"
-            color="error"
-            icon="mdi-delete"
-            variant="text"
-            @click="removeNicSetting(index)"
+      <v-card>
+        <v-card-title>IP設定</v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="ipAddress"
+            clearable
+            label="IP位置"
+            :rules="[ipRule]"
           />
-        </div>
-      </v-card-text>
-    </v-card>
+          <v-text-field
+            v-model="port"
+            clearable
+            label="Port號"
+            :rules="[portRule]"
+          />
+          <v-text-field
+            v-model="ipName"
+            clearable
+            label="IP名稱"
+            :rules="[nameRule]"
+          />
+          <v-select
+            v-model="selectedNic"
+            clearable
+            item-title="name"
+            item-value="id"
+            :items="networkInterfaces"
+            label="網卡名稱"
+            return-object
+            :rules="[nicRule]"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="primary" @click="submit">送出</v-btn>
+        </v-card-actions>
+      </v-card>
+
+      <v-card class="mt-6">
+        <v-card-title>
+          網卡資訊
+          <v-spacer />
+          <v-btn icon="mdi-plus" variant="text" @click="addNicSetting" />
+        </v-card-title>
+        <v-card-text>
+          <div v-for="(nic, index) in nicSettings" :key="index" class="mb-4">
+            <v-text-field v-model="nic.name" label="名稱" />
+            <v-text-field v-model="nic.address" label="位址" />
+            <v-text-field v-model="nic.bridge" label="Bridge相關設置" />
+            <v-btn
+              class="mt-2"
+              color="error"
+              icon="mdi-delete"
+              variant="text"
+              @click="removeNicSetting(index)"
+            />
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-form>
   </v-container>
 
   <v-dialog v-model="deleteWarning" max-width="300">
