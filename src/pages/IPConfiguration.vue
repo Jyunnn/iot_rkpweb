@@ -17,29 +17,14 @@
           <v-card>
             <v-card-title>容器IP設定</v-card-title>
             <v-card-text>
+              <v-text-field v-model="containerIp" clearable label="IP位置" />
+              <v-text-field v-model="subnetMask" clearable label="網路遮罩" />
+              <v-text-field v-model="virtualNicName" clearable label="虛擬網卡名稱" />
+              <v-text-field v-model="virtualNicIp" clearable label="虛擬網卡IP" />
               <v-text-field
-                v-model="ipAddress"
+                v-model="virtualNicMask"
                 clearable
-                label="IP位置"
-              />
-              <v-text-field
-                v-model="port"
-                clearable
-                label="Port號"
-              />
-              <v-text-field
-                v-model="ipName"
-                clearable
-                label="IP名稱"
-              />
-              <v-select
-                v-model="selectedNic"
-                clearable
-                item-title="name"
-                item-value="id"
-                :items="networkInterfaces"
-                label="網卡名稱"
-                return-object
+                label="虛擬網卡網路遮罩"
               />
             </v-card-text>
             <v-card-actions>
@@ -108,11 +93,11 @@
 <script setup>
   import { onMounted, ref, watch } from 'vue'
 
-  const ipAddress = ref('')
-  const port = ref('')
-  const ipName = ref('')
-  const networkInterfaces = ref([])
-  const selectedNic = ref(null)
+  const containerIp = ref('')
+  const subnetMask = ref('')
+  const virtualNicName = ref('')
+  const virtualNicIp = ref('')
+  const virtualNicMask = ref('')
   const savedContainerIps = ref([])
   const selectedSavedIp = ref(null)
   const logsDialog = ref(false)
@@ -133,44 +118,48 @@
     nicSettings.value.splice(index, 1)
   }
 
-  watch(ipAddress, val => {
+  watch(containerIp, val => {
+    const sanitized = val.replace(/[^\d.:]/g, '')
+    if (sanitized !== val) containerIp.value = sanitized
+  })
+
+  watch(subnetMask, val => {
     const sanitized = val.replace(/[^\d.]/g, '')
-    if (sanitized !== val) ipAddress.value = sanitized
+    if (sanitized !== val) subnetMask.value = sanitized
   })
 
-  watch(port, val => {
-    const sanitized = val.replace(/[^\d]/g, '')
-    if (sanitized !== val) port.value = sanitized
-  })
-
-  watch(ipName, val => {
+  watch(virtualNicName, val => {
     const sanitized = val.replace(/[^A-Za-z0-9\u4E00-\u9FA5]/g, '')
-    if (sanitized !== val) ipName.value = sanitized
+    if (sanitized !== val) virtualNicName.value = sanitized
+  })
+
+  watch(virtualNicIp, val => {
+    const sanitized = val.replace(/[^\d.:]/g, '')
+    if (sanitized !== val) virtualNicIp.value = sanitized
+  })
+
+  watch(virtualNicMask, val => {
+    const sanitized = val.replace(/[^\d.]/g, '')
+    if (sanitized !== val) virtualNicMask.value = sanitized
   })
 
   watch(selectedSavedIp, val => {
     if (val) {
-      ipAddress.value = val.ip ?? ''
-      port.value = val.port == null ? '' : String(val.port)
-      ipName.value = val.name ?? ''
-      selectedNic.value
-        = networkInterfaces.value.find(n => n.id === val.nicId) || null
+      containerIp.value = val.ip ?? ''
+      subnetMask.value = val.mask ?? ''
+      virtualNicName.value = val.vnicName ?? ''
+      virtualNicIp.value = val.vnicIp ?? ''
+      virtualNicMask.value = val.vnicMask ?? ''
     } else {
-      ipAddress.value = ''
-      port.value = ''
-      ipName.value = ''
-      selectedNic.value = null
+      containerIp.value = ''
+      subnetMask.value = ''
+      virtualNicName.value = ''
+      virtualNicIp.value = ''
+      virtualNicMask.value = ''
     }
   })
 
   onMounted(async () => {
-    try {
-      const res = await fetch('/api/network-interfaces')
-      networkInterfaces.value = res.ok ? await res.json() : []
-    } catch {
-      networkInterfaces.value = []
-    }
-
     try {
       const res = await fetch('/api/container-ips')
       savedContainerIps.value = res.ok ? await res.json() : []
@@ -180,35 +169,69 @@
   })
 
   const submit = async () => {
-    const ipv4Regex = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/
-    if (!ipAddress.value) {
+    const ipv4Regex
+      = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/
+    const validateIpWithPort = value => {
+      const [ip, port] = value.split(':')
+      if (!ipv4Regex.test(ip)) return false
+      if (port !== undefined) {
+        const num = Number(port)
+        if (Number.isNaN(num) || num < 0 || num > 65_535) return false
+      }
+      return true
+    }
+    const validateNetmask = mask => {
+      if (!ipv4Regex.test(mask)) return false
+      const bits = mask
+        .split('.')
+        .map(p => Number(p).toString(2).padStart(8, '0'))
+        .join('')
+      const firstZero = bits.indexOf('0')
+      if (firstZero === -1) return true
+      return !bits.slice(firstZero).includes('1')
+    }
+    if (!containerIp.value) {
       responseMessage.value = '請輸入IP位置'
       logsDialog.value = true
       return
     }
-    if (!ipv4Regex.test(ipAddress.value)) {
+    if (!validateIpWithPort(containerIp.value)) {
       responseMessage.value = '請輸入正確的IP格式'
       logsDialog.value = true
       return
     }
-    if (!port.value) {
-      responseMessage.value = '請輸入Port號'
+    if (!subnetMask.value) {
+      responseMessage.value = '請輸入網路遮罩'
       logsDialog.value = true
       return
     }
-    const portNum = Number(port.value)
-    if (portNum < 0 || portNum > 65_535) {
-      responseMessage.value = '請輸入正確的Port號'
+    if (!validateNetmask(subnetMask.value)) {
+      responseMessage.value = '請輸入正確的網路遮罩'
       logsDialog.value = true
       return
     }
-    if (!ipName.value) {
-      responseMessage.value = '請輸入IP名稱'
+    if (!virtualNicName.value) {
+      responseMessage.value = '請輸入虛擬網卡名稱'
       logsDialog.value = true
       return
     }
-    if (!selectedNic.value) {
-      responseMessage.value = '請選擇網卡'
+    if (!virtualNicIp.value) {
+      responseMessage.value = '請輸入虛擬網卡IP'
+      logsDialog.value = true
+      return
+    }
+    if (!validateIpWithPort(virtualNicIp.value)) {
+      responseMessage.value = '請輸入正確的虛擬網卡IP'
+      logsDialog.value = true
+      return
+    }
+    if (!virtualNicMask.value) {
+      responseMessage.value = '請輸入虛擬網卡網路遮罩'
+      logsDialog.value = true
+      return
+    }
+    if (!validateNetmask(virtualNicMask.value)) {
+      responseMessage.value = '請輸入正確的虛擬網卡網路遮罩'
       logsDialog.value = true
       return
     }
@@ -220,11 +243,11 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ip: ipAddress.value,
-          port: port.value,
-          name: ipName.value,
-          nicId: selectedNic.value.id,
-          nicName: selectedNic.value.name,
+          ip: containerIp.value,
+          mask: subnetMask.value,
+          vnicName: virtualNicName.value,
+          vnicIp: virtualNicIp.value,
+          vnicMask: virtualNicMask.value,
         }),
       })
       if (res.ok) {
