@@ -18,50 +18,45 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12">
           <v-card>
             <v-card-title>容器IP設定</v-card-title>
             <v-card-text>
-              <v-text-field v-model="containerIp" clearable label="IP位置" />
-              <v-text-field v-model="subnetMask" clearable label="網路遮罩" />
-              <v-text-field v-model="virtualNicName" clearable label="虛擬網卡名稱" />
-              <v-text-field v-model="virtualNicIp" clearable label="虛擬網卡IP" />
-              <v-text-field
-                v-model="virtualNicMask"
-                clearable
-                label="虛擬網卡網路遮罩"
-              />
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="containerIp" clearable label="IP位置" />
+                  <v-text-field v-model="subnetMask" clearable label="網路遮罩" />
+                  <v-text-field v-model="virtualNicName" clearable label="虛擬網卡名稱" />
+                  <v-text-field v-model="virtualNicIp" clearable label="虛擬網卡IP" />
+                  <v-text-field
+                    v-model="virtualNicMask"
+                    clearable
+                    label="虛擬網卡網路遮罩"
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <div class="d-flex align-center mb-4">
+                    <span class="text-subtitle-1">網卡資訊</span>
+                    <v-btn icon="mdi-plus" variant="text" @click="addNicSetting" />
+                  </div>
+                  <div v-for="(nic, index) in nicSettings" :key="index" class="mb-4">
+                    <v-text-field v-model="nic.name" label="名稱" />
+                    <v-text-field v-model="nic.address" label="位址" />
+                    <v-text-field v-model="nic.bridge" label="Bridge相關設置" />
+                    <v-btn
+                      class="mt-2"
+                      color="error"
+                      icon="mdi-delete"
+                      variant="text"
+                      @click="removeNicSetting(index)"
+                    />
+                  </div>
+                </v-col>
+              </v-row>
             </v-card-text>
             <v-card-actions>
               <v-spacer />
               <v-btn color="primary" @click="submit">送出</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-
-        <v-col cols="12" md="6">
-          <v-card class="mt-6 mt-md-0">
-            <v-card-title>
-              網卡資訊
-              <v-btn icon="mdi-plus" variant="text" @click="addNicSetting" />
-            </v-card-title>
-            <v-card-text>
-              <div v-for="(nic, index) in nicSettings" :key="index" class="mb-4">
-                <v-text-field v-model="nic.name" label="名稱" />
-                <v-text-field v-model="nic.address" label="位址" />
-                <v-text-field v-model="nic.bridge" label="Bridge相關設置" />
-                <v-btn
-                  class="mt-2"
-                  color="error"
-                  icon="mdi-delete"
-                  variant="text"
-                  @click="removeNicSetting(index)"
-                />
-              </div>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn color="primary" @click="submitNicSettings">送出</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -265,11 +260,15 @@
       logsDialog.value = true
       return
     }
-
+    if (!nicSettings.value.every(nic => nic.name && nic.address && nic.bridge)) {
+      responseMessage.value = '請完整填寫所有網卡資訊'
+      logsDialog.value = true
+      return
+    }
     responseLoading.value = true
     logsDialog.value = true
     try {
-      const res = await fetch('/api/ip-config', {
+      const ipRes = await fetch('/api/ip-config', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -280,36 +279,16 @@
           vnicMask: virtualNicMask.value,
         }),
       })
-      if (res.ok) {
-        const data = await res.json().catch(() => ({}))
-        responseMessage.value = data.message ?? '設定成功'
-      } else {
-        responseMessage.value = '設定失敗'
-      }
-    } catch {
-      responseMessage.value = '設定失敗'
-    } finally {
-      responseLoading.value = false
-    }
-  }
-
-  const submitNicSettings = async () => {
-    if (!nicSettings.value.every(nic => nic.name && nic.address && nic.bridge)) {
-      responseMessage.value = '請完整填寫所有網卡資訊'
-      logsDialog.value = true
-      return
-    }
-    responseLoading.value = true
-    logsDialog.value = true
-    try {
-      const res = await fetch('/api/nic-config', {
+      const nicRes = await fetch('/api/nic-config', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nicSettings: nicSettings.value }),
       })
-      if (res.ok) {
-        const data = await res.json().catch(() => ({}))
-        responseMessage.value = data.message ?? '設定成功'
+      if (ipRes.ok && nicRes.ok) {
+        const ipData = await ipRes.json().catch(() => ({}))
+        const nicData = await nicRes.json().catch(() => ({}))
+        responseMessage.value
+          = ipData.message ?? nicData.message ?? '設定成功'
       } else {
         responseMessage.value = '設定失敗'
       }
