@@ -119,26 +119,46 @@
   }
 
   watch(containerIp, val => {
+    if (typeof val !== 'string') {
+      containerIp.value = ''
+      return
+    }
     const sanitized = val.replace(/[^\d.:]/g, '')
     if (sanitized !== val) containerIp.value = sanitized
   })
 
   watch(subnetMask, val => {
+    if (typeof val !== 'string') {
+      subnetMask.value = ''
+      return
+    }
     const sanitized = val.replace(/[^\d.]/g, '')
     if (sanitized !== val) subnetMask.value = sanitized
   })
 
   watch(virtualNicName, val => {
+    if (typeof val !== 'string') {
+      virtualNicName.value = ''
+      return
+    }
     const sanitized = val.replace(/[^A-Za-z0-9\u4E00-\u9FA5]/g, '')
     if (sanitized !== val) virtualNicName.value = sanitized
   })
 
   watch(virtualNicIp, val => {
+    if (typeof val !== 'string') {
+      virtualNicIp.value = ''
+      return
+    }
     const sanitized = val.replace(/[^\d.:]/g, '')
     if (sanitized !== val) virtualNicIp.value = sanitized
   })
 
   watch(virtualNicMask, val => {
+    if (typeof val !== 'string') {
+      virtualNicMask.value = ''
+      return
+    }
     const sanitized = val.replace(/[^\d.]/g, '')
     if (sanitized !== val) virtualNicMask.value = sanitized
   })
