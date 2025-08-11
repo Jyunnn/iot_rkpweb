@@ -16,6 +16,7 @@
               <th class="text-left col-protocol">協定</th>
               <th class="text-left col-container-ip">容器IP</th>
               <th class="text-left col-container-port">容器Port</th>
+              <th class="text-left col-actions">刪除</th>
             </tr>
           </thead>
           <tbody>
@@ -76,14 +77,31 @@
                   @input="row.containerPort = sanitizePort(row.containerPort)"
                 />
               </td>
+              <td class="text-center col-actions">
+                <v-btn
+                  icon="mdi-delete"
+                  variant="text"
+                  @click="openDelete(index)"
+                />
+              </td>
             </tr>
             <tr>
-              <td class="text-center" colspan="6">
+              <td class="text-center" colspan="7">
                 <v-btn icon="mdi-plus" variant="text" @click="addRow" />
               </td>
             </tr>
           </tbody>
         </v-table>
+        <v-dialog v-model="deleteDialog" max-width="320">
+          <v-card>
+            <v-card-title class="text-h6">確認刪除該列？</v-card-title>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn variant="text" @click="deleteDialog = false">否</v-btn>
+              <v-btn variant="text" @click="deleteRow">是</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-card-text>
     </v-card>
   </v-container>
@@ -175,6 +193,19 @@
     }
   }
 
+  const deleteDialog = ref(false)
+  const deleteIndex = ref(null)
+
+  function openDelete (index) {
+    deleteIndex.value = index
+    deleteDialog.value = true
+  }
+  function deleteRow () {
+    if (deleteIndex.value !== null) rows.value.splice(deleteIndex.value, 1)
+    deleteDialog.value = false
+    deleteIndex.value = null
+  }
+
   function addRow () {
     rows.value.push({
       nic: null,
@@ -263,5 +294,8 @@
   }
   .col-container-port {
     width: 120px;
+  }
+  .col-actions {
+    width: 80px;
   }
 </style>
