@@ -7,20 +7,20 @@
         <v-btn color="primary" @click="save">儲存</v-btn>
       </v-card-title>
       <v-card-text>
-        <v-table>
+        <v-table class="proxy-table">
           <thead>
             <tr>
-              <th class="text-left">網路介面</th>
-              <th class="text-left">上位IP</th>
-              <th class="text-left">上位Port</th>
-              <th class="text-left">協定</th>
-              <th class="text-left">容器IP</th>
-              <th class="text-left">容器Port</th>
+              <th class="text-left col-nic">網路介面</th>
+              <th class="text-left col-upstream-ip">上位IP</th>
+              <th class="text-left col-upstream-port">上位Port</th>
+              <th class="text-left col-protocol">協定</th>
+              <th class="text-left col-container-ip">容器IP</th>
+              <th class="text-left col-container-port">容器Port</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(row, index) in rows" :key="index">
-              <td>
+              <td class="col-nic">
                 <v-select
                   v-model="row.nic"
                   density="compact"
@@ -31,7 +31,7 @@
                   return-object
                 />
               </td>
-              <td>
+              <td class="col-upstream-ip">
                 <v-text-field
                   v-model="row.upstreamIp"
                   density="compact"
@@ -40,7 +40,7 @@
                   @input="row.upstreamIp = sanitizeIp(row.upstreamIp)"
                 />
               </td>
-              <td>
+              <td class="col-upstream-port">
                 <v-text-field
                   v-model="row.upstreamPort"
                   density="compact"
@@ -49,7 +49,7 @@
                   @input="row.upstreamPort = sanitizePort(row.upstreamPort)"
                 />
               </td>
-              <td>
+              <td class="col-protocol">
                 <v-select
                   v-model="row.protocol"
                   density="compact"
@@ -57,7 +57,7 @@
                   :items="protocols"
                 />
               </td>
-              <td>
+              <td class="col-container-ip">
                 <v-combobox
                   v-model="row.containerIp"
                   density="compact"
@@ -67,7 +67,7 @@
                   @change="val => handleContainerIp(index, val)"
                 />
               </td>
-              <td>
+              <td class="col-container-port">
                 <v-text-field
                   v-model="row.containerPort"
                   density="compact"
@@ -115,18 +115,32 @@
       containerIp: '172.17.0.3',
       containerPort: '8443',
     },
+    {
+      nicId: 1,
+      upstreamIp: '192.168.1.12',
+      upstreamPort: '8080',
+      protocol: 'HTTP',
+      containerIp: '172.17.0.4',
+      containerPort: '8081',
+    },
+    {
+      nicId: 2,
+      upstreamIp: '192.168.1.13',
+      upstreamPort: '8443',
+      protocol: 'HTTPS',
+      containerIp: '172.17.0.5',
+      containerPort: '8444',
+    },
   ]
 
-  const rows = ref([
-    {
-      nic: null,
-      upstreamIp: '',
-      upstreamPort: '',
-      protocol: '',
-      containerIp: '',
-      containerPort: '',
-    },
-  ])
+  const rows = ref(savedConfigs.map(c => ({
+    nic: networkInterfaces.value.find(n => n.id === c.nicId) || null,
+    upstreamIp: c.upstreamIp,
+    upstreamPort: c.upstreamPort,
+    protocol: c.protocol,
+    containerIp: c.containerIp,
+    containerPort: c.containerPort,
+  })))
 
   const ipv4Regex = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/
 
@@ -224,3 +238,30 @@
     }
   })
 </script>
+
+<style scoped>
+  .proxy-table th,
+  .proxy-table td {
+    width: 150px;
+    max-width: 150px;
+  }
+
+  .col-nic {
+    width: 120px;
+  }
+  .col-upstream-ip {
+    width: 160px;
+  }
+  .col-upstream-port {
+    width: 120px;
+  }
+  .col-protocol {
+    width: 100px;
+  }
+  .col-container-ip {
+    width: 160px;
+  }
+  .col-container-port {
+    width: 120px;
+  }
+</style>
