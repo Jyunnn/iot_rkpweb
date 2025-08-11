@@ -16,7 +16,7 @@
               <th class="text-left col-protocol">協定</th>
               <th class="text-left col-container-ip">容器IP</th>
               <th class="text-left col-container-port">容器Port</th>
-              <th class="text-center col-actions">
+              <th class="text-center col-delete">
                 <v-icon icon="mdi-delete" />
               </th>
             </tr>
@@ -79,7 +79,7 @@
                   @input="row.containerPort = sanitizePort(row.containerPort)"
                 />
               </td>
-              <td class="text-center col-actions">
+              <td class="text-center col-delete">
                 <v-btn
                   icon="mdi-delete"
                   variant="text"
@@ -273,31 +273,31 @@
 </script>
 
 <style scoped>
-  .proxy-table th,
-  .proxy-table td {
-    width: 150px;
-    max-width: 150px;
-  }
-
   .col-nic {
     width: 120px;
+    max-width: 120px;
   }
   .col-upstream-ip {
     width: 160px;
+    max-width: 160px;
   }
   .col-upstream-port {
     width: 120px;
+    max-width: 120px;
   }
   .col-protocol {
     width: 100px;
+    max-width: 100px;
   }
   .col-container-ip {
     width: 160px;
+    max-width: 160px;
   }
   .col-container-port {
     width: 120px;
+    max-width: 120px;
   }
-  .col-actions {
+  .col-delete {
     width: 40px;
     max-width: 40px;
     padding: 0;
