@@ -16,7 +16,9 @@
               <th class="text-left col-protocol">協定</th>
               <th class="text-left col-container-ip">容器IP</th>
               <th class="text-left col-container-port">容器Port</th>
-              <th class="text-left col-actions">刪除</th>
+              <th class="text-center col-actions">
+                <v-icon icon="mdi-delete" />
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -296,6 +298,8 @@
     width: 120px;
   }
   .col-actions {
-    width: 80px;
+    width: 40px;
+    max-width: 40px;
+    padding: 0;
   }
 </style>
