@@ -2,9 +2,20 @@
   <v-container class="pa-4">
     <v-form>
       <v-row>
+        <v-col cols="12">
+          <v-select
+            v-model="selectedSavedIp"
+            clearable
+            item-title="name"
+            item-value="id"
+            :items="savedContainerIps"
+            label="已儲存的容器IP"
+            return-object
+          />
+        </v-col>
         <v-col cols="12" md="6">
           <v-card>
-            <v-card-title>IP設定</v-card-title>
+            <v-card-title>容器IP設定</v-card-title>
             <v-card-text>
               <v-text-field
                 v-model="ipAddress"
@@ -102,6 +113,8 @@
   const ipName = ref('')
   const networkInterfaces = ref([])
   const selectedNic = ref(null)
+  const savedContainerIps = ref([])
+  const selectedSavedIp = ref(null)
   const logsDialog = ref(false)
   const responseMessage = ref('')
   const responseLoading = ref(false)
@@ -135,12 +148,34 @@
     if (sanitized !== val) ipName.value = sanitized
   })
 
+  watch(selectedSavedIp, val => {
+    if (val) {
+      ipAddress.value = val.ip ?? ''
+      port.value = val.port == null ? '' : String(val.port)
+      ipName.value = val.name ?? ''
+      selectedNic.value
+        = networkInterfaces.value.find(n => n.id === val.nicId) || null
+    } else {
+      ipAddress.value = ''
+      port.value = ''
+      ipName.value = ''
+      selectedNic.value = null
+    }
+  })
+
   onMounted(async () => {
     try {
       const res = await fetch('/api/network-interfaces')
       networkInterfaces.value = res.ok ? await res.json() : []
     } catch {
       networkInterfaces.value = []
+    }
+
+    try {
+      const res = await fetch('/api/container-ips')
+      savedContainerIps.value = res.ok ? await res.json() : []
+    } catch {
+      savedContainerIps.value = []
     }
   })
 
