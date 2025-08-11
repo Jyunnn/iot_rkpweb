@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "容器A",
+    "ip": "192.168.0.10",
+    "mask": "255.255.255.0",
+    "vnicName": "vnicA",
+    "vnicIp": "10.0.0.10",
+    "vnicMask": "255.255.255.0",
+    "nicSettings": [
+      { "name": "eth0", "address": "192.168.0.10", "bridge": "br0" },
+      { "name": "eth1", "address": "192.168.0.11", "bridge": "br0" },
+      { "name": "eth2", "address": "192.168.0.12", "bridge": "br1" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "容器B",
+    "ip": "192.168.0.20",
+    "mask": "255.255.255.0",
+    "vnicName": "vnicB",
+    "vnicIp": "10.0.0.20",
+    "vnicMask": "255.255.255.0",
+    "nicSettings": [
+      { "name": "eth0", "address": "192.168.0.20", "bridge": "br0" },
+      { "name": "eth1", "address": "192.168.0.21", "bridge": "br1" },
+      { "name": "eth2", "address": "192.168.0.22", "bridge": "br2" },
+      { "name": "eth3", "address": "192.168.0.23", "bridge": "br3" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "容器C",
+    "ip": "192.168.0.30",
+    "mask": "255.255.255.0",
+    "vnicName": "vnicC",
+    "vnicIp": "10.0.0.30",
+    "vnicMask": "255.255.255.0",
+    "nicSettings": [
+      { "name": "eth0", "address": "192.168.0.30", "bridge": "br0" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "容器D",
+    "ip": "192.168.0.40",
+    "mask": "255.255.255.0",
+    "vnicName": "vnicD",
+    "vnicIp": "10.0.0.40",
+    "vnicMask": "255.255.255.0",
+    "nicSettings": [
+      { "name": "eth0", "address": "192.168.0.40", "bridge": "br0" },
+      { "name": "eth1", "address": "192.168.0.41", "bridge": "br1" }
+    ]
+  }
+]
