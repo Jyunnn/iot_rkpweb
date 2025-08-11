@@ -58,12 +58,13 @@
                 />
               </td>
               <td>
-                <v-text-field
+                <v-combobox
                   v-model="row.containerIp"
                   density="compact"
                   hide-details
+                  :items="savedConfigs.map(c => c.containerIp)"
                   :rules="[ipRule]"
-                  @input="row.containerIp = sanitizeIp(row.containerIp)"
+                  @change="val => handleContainerIp(index, val)"
                 />
               </td>
               <td>
@@ -91,8 +92,30 @@
 <script setup>
   import { onMounted, ref } from 'vue'
 
-  const networkInterfaces = ref([])
+  const networkInterfaces = ref([
+    { id: 1, name: 'eth0' },
+    { id: 2, name: 'eth1' },
+  ])
   const protocols = ['HTTP', 'HTTPS']
+
+  const savedConfigs = [
+    {
+      nicId: 1,
+      upstreamIp: '192.168.1.10',
+      upstreamPort: '80',
+      protocol: 'HTTP',
+      containerIp: '172.17.0.2',
+      containerPort: '8080',
+    },
+    {
+      nicId: 2,
+      upstreamIp: '192.168.1.11',
+      upstreamPort: '443',
+      protocol: 'HTTPS',
+      containerIp: '172.17.0.3',
+      containerPort: '8443',
+    },
+  ]
 
   const rows = ref([
     {
@@ -118,6 +141,24 @@
   }
   function sanitizePort (val) {
     return val.replace(/[^\d]/g, '')
+  }
+
+  function handleContainerIp (index, val) {
+    const ip = sanitizeIp(val)
+    const data = savedConfigs.find(c => c.containerIp === ip)
+    if (data) {
+      const nic = networkInterfaces.value.find(n => n.id === data.nicId) || null
+      rows.value[index] = {
+        nic,
+        upstreamIp: data.upstreamIp,
+        upstreamPort: data.upstreamPort,
+        protocol: data.protocol,
+        containerIp: data.containerIp,
+        containerPort: data.containerPort,
+      }
+    } else {
+      rows.value[index].containerIp = ip
+    }
   }
 
   function addRow () {
@@ -169,9 +210,9 @@
   onMounted(async () => {
     try {
       const nicRes = await fetch('/api/network-interfaces')
-      networkInterfaces.value = nicRes.ok ? await nicRes.json() : []
+      networkInterfaces.value = nicRes.ok ? await nicRes.json() : networkInterfaces.value
     } catch {
-      networkInterfaces.value = []
+      /* keep defaults */
     }
 
     try {
