@@ -3,15 +3,20 @@
     <v-form>
       <v-row>
         <v-col cols="12">
-          <v-select
-            v-model="selectedSavedIp"
-            clearable
-            item-title="name"
-            item-value="id"
-            :items="savedContainerIps"
-            label="已儲存的容器IP"
-            return-object
-          />
+          <v-card class="mb-6">
+            <v-card-title>已儲存的容器IP</v-card-title>
+            <v-card-text>
+              <v-select
+                v-model="selectedSavedIp"
+                clearable
+                item-title="name"
+                item-value="id"
+                :items="savedContainerIps"
+                label="選擇容器IP"
+                return-object
+              />
+            </v-card-text>
+          </v-card>
         </v-col>
         <v-col cols="12" md="6">
           <v-card>
