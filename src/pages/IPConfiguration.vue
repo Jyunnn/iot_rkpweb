@@ -150,12 +150,17 @@
       virtualNicName.value = val.vnicName ?? ''
       virtualNicIp.value = val.vnicIp ?? ''
       virtualNicMask.value = val.vnicMask ?? ''
+      nicSettings.value
+        = val.nicSettings?.length
+          ? val.nicSettings.map(nic => ({ ...nic }))
+          : [{ name: '', address: '', bridge: '' }]
     } else {
       containerIp.value = ''
       subnetMask.value = ''
       virtualNicName.value = ''
       virtualNicIp.value = ''
       virtualNicMask.value = ''
+      nicSettings.value = [{ name: '', address: '', bridge: '' }]
     }
   })
 
