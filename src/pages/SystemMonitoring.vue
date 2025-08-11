@@ -3,6 +3,9 @@
     <v-card>
       <v-card-title>系統監控</v-card-title>
       <v-card-text>
+        <v-btn class="mb-4" color="primary" @click="loadSystemsGraphQL">
+          使用 GraphQL 重新載入
+        </v-btn>
         <div class="system-grid">
           <SystemCard
             v-for="(item, index) in systems"
@@ -55,7 +58,7 @@
 <script setup>
   import { ref } from 'vue'
 
-  const systems = [
+  const systems = ref([
     {
       ip: '192.168.0.10',
       networkUsage: '120MB/s',
@@ -96,7 +99,30 @@
       networkUsage: '70MB/s',
       isActive: true,
     },
-  ]
+  ])
+
+  async function loadSystemsGraphQL () {
+    const query = `
+      query {
+        systems {
+          ip
+          networkUsage
+          isActive
+        }
+      }
+    `
+    try {
+      const res = await fetch('/graphql', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+      })
+      const { data } = await res.json()
+      systems.value = data?.systems ?? []
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const logsDialog = ref(false)
   const logs = ref([])
