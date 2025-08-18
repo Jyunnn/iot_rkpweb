@@ -29,3 +29,27 @@
   --color-card-glass: rgba(35,41,66,0.85);
   --box-shadow-card: 0 2px 12px rgba(68,108,252,0.05);
 }
+
+:root.light {
+  --color-primary: #446cfc;
+  --color-secondary: #30c7d5;
+
+  --color-bg-main: #f5f7ff;
+  --color-bg-card: #ffffff;
+  --color-bg-nav: #446cfc;
+
+  --color-text-main: #1e1e1e;
+  --color-text-secondary: #333333;
+
+  --color-border: #e0e0e0;
+
+  --color-success: #1fcb81;
+  --color-warning: #ffc542;
+  --color-error: #f24848;
+
+  --color-download: #1fd47c;
+  --color-upload: #f5b941;
+
+  --color-card-glass: rgba(255,255,255,0.85);
+  --box-shadow-card: 0 2px 12px rgba(0,0,0,0.05);
+}

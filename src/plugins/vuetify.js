@@ -16,16 +16,29 @@ import 'vuetify/styles'
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
-    defaultTheme: 'system',
-    myTheme: {
-      dark: true,
-      colors: {
-        primary: 'var(--color-primary)',
-        secondary: 'var(--color-secondary)',
-        success: 'var(--color-success)',
-        warning: 'var(--color-warning)',
-        error: 'var(--color-error)',
-        textmain: 'var(--color-text-main)',
+    defaultTheme: 'dark',
+    themes: {
+      dark: {
+        dark: true,
+        colors: {
+          primary: 'var(--color-primary)',
+          secondary: 'var(--color-secondary)',
+          success: 'var(--color-success)',
+          warning: 'var(--color-warning)',
+          error: 'var(--color-error)',
+          textmain: 'var(--color-text-main)',
+        },
+      },
+      light: {
+        dark: false,
+        colors: {
+          primary: 'var(--color-primary)',
+          secondary: 'var(--color-secondary)',
+          success: 'var(--color-success)',
+          warning: 'var(--color-warning)',
+          error: 'var(--color-error)',
+          textmain: 'var(--color-text-main)',
+        },
       },
     },
   },
