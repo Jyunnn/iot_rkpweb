@@ -18,6 +18,15 @@
         <p> {{ link.title }}</p>
       </div>
     </v-list-item>
+    <v-divider />
+    <v-list-item>
+      <v-switch
+        v-model="isDark"
+        color="primary"
+        inset
+        label="深色模式"
+      />
+    </v-list-item>
   </v-navigation-drawer>
 
   <v-btn
@@ -31,8 +40,25 @@
 </template>
 
 <script setup>
-  import { ref, shallowRef } from 'vue'
+  import { computed, onMounted, ref, shallowRef } from 'vue'
+  import { useTheme } from 'vuetify'
+
   const open = shallowRef(true)
+  const theme = useTheme()
+
+  const isDark = computed({
+    get: () => theme.global.current.value.dark,
+    set: val => {
+      const newTheme = val ? 'dark' : 'light'
+      theme.global.name.value = newTheme
+      document.documentElement.classList.toggle('light', newTheme === 'light')
+    },
+  })
+
+  onMounted(() => {
+    document.documentElement.classList.toggle('light', !isDark.value)
+  })
+
   const linklist = ref([
     {
       icon: 'mdi-monitor-dashboard',
