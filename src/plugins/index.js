@@ -6,6 +6,7 @@
 
 import router from '@/router'
 import pinia from '@/stores'
+import apollo from './apollo'
 // Plugins
 import vuetify from './vuetify'
 
@@ -14,4 +15,5 @@ export function registerPlugins (app) {
     .use(vuetify)
     .use(router)
     .use(pinia)
+    .use(apollo)
 }

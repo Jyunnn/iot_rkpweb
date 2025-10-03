@@ -61,6 +61,45 @@ yarn build
 
 Once the build process is completed, your application will be ready for deployment in a production environment.
 
+## 🚀 GraphQL Example
+
+This project includes a sample GraphQL integration. To run the example, you need to start both the backend and frontend servers.
+
+### 1. Start the Backend Server
+
+The backend is a small Node.js server using Apollo Server.
+
+```bash
+# Navigate to the backend directory
+cd backend
+
+# Install dependencies
+npm install
+
+# Start the server (will run on http://localhost:4000)
+npm start
+```
+
+### 2. Start the Frontend Server
+
+In a separate terminal, start the Vite development server from the project root.
+
+```bash
+# Make sure you are in the project root directory
+# If you are in the backend directory, go back one level
+cd ..
+
+# Install frontend dependencies (if you haven't already)
+npm install
+
+# Start the frontend dev server
+npm run dev
+```
+
+### 3. View the Example
+
+Once both servers are running, open your browser and navigate to [http://localhost:3000/graphql-example](http://localhost:3000/graphql-example) to see the page that fetches data from the GraphQL backend.
+
 ## 💪 Support Vuetify Development
 
 This project is built with [Vuetify](https://vuetifyjs.com/en/), a UI Library with a comprehensive collection of Vue components. Vuetify is an MIT licensed Open Source project that has been made possible due to the generous contributions by our [sponsors and backers](https://vuetifyjs.com/introduction/sponsors-and-backers/). If you are interested in supporting this project, please consider:

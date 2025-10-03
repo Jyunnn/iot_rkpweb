@@ -19,6 +19,7 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/ContainerManagement': RouteRecordInfo<'/ContainerManagement', '/ContainerManagement', Record<never, never>, Record<never, never>>,
+    '/graphql-example': RouteRecordInfo<'/graphql-example', '/graphql-example', Record<never, never>, Record<never, never>>,
     '/IPConfiguration': RouteRecordInfo<'/IPConfiguration', '/IPConfiguration', Record<never, never>, Record<never, never>>,
     '/ReverseProxyConfiguration': RouteRecordInfo<'/ReverseProxyConfiguration', '/ReverseProxyConfiguration', Record<never, never>, Record<never, never>>,
     '/SystemMonitoring': RouteRecordInfo<'/SystemMonitoring', '/SystemMonitoring', Record<never, never>, Record<never, never>>,
